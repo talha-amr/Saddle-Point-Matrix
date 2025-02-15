@@ -1,64 +1,76 @@
-#include < iostream>
+#include <iostream>
 using namespace std;
-bool isMinimumRow(int arr[][50], int row, int columns, int rowNo, int value)
-{
-	for (int i = 0; i < columns; i++)
+
+// Function prototypes
+bool isMinimumRow(int arr[][50], int row, int columns, int rowNo, int value);
+bool isMaximumColumn(int arr[][50], int rows, int columns, int colNo, int value);
+bool isSaddlePoint(int arr[][50], int rows, int columns, int rowNo, int colNo, int value);
+void printSaddle(int arr[][50], int rows, int columns);
+
+int main() {
+    int array[50][50];
+    int rows, columns;
+
+    cout << "Enter number of rows and columns: ";
+    cin >> rows >> columns;
+
+    cout << "Enter matrix elements:\n";
+    for (int i = 0; i < rows; i++) 
+    {
+        for (int j = 0; j < columns; j++)
 	{
-		if (arr[rowNo][i] < value)
-		{
-			return false;
-		}
-	}
-	return true;
+            cin >> array[i][j];
+        }
+    }
+
+    printSaddle(array, rows, columns);
+
+    return 0;
 }
-bool isMaximumColumn(int arr[][50], int rows, int columns, int colNo, int value)
+bool isMinimumRow(int arr[][50], int row, int columns, int rowNo, int value) 
 {
-	for (int i = 0; i < rows; i++)
+    for (int i = 0; i < columns; i++) \
+    {
+        if (arr[rowNo][i] < value)
 	{
-		if (arr[i][colNo] > value)
-		{
-			return false;
-		}
-	}
-	return true;
-}
-bool isSaddlePoint(int arr[][50], int row, int columns, int rowNo, int colNo, int value)
-{
-	if (isMinimumRow(arr, row, columns, rowNo, value) && isMaximumColumn(arr, row, columns, colNo, value))
-	{
-		return true;
-	}
-	return false;
-}
-void printSaddle(int arr[][50], int rows, int columns)
-{
-	bool found = false;
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < columns; j++) {
-			int value = arr[i][j];
-			if (isSaddlePoint(arr, rows, columns, i, j, value)) {
-				found = true;
-				cout << "Saddle Point is "<<"(" << i << "," << j << ")";
-			}
-		}
-	}
-	if (!found) {
-		cout << "No saddle point\n";
-	}
+            return false;
+        }
+    }
+    return true;
 }
 
-int main()
+bool isMaximumColumn(int arr[][50], int rows, int columns, int colNo, int value) 
 {
-	int array[50][50];
-	int rows, columns;
-	cin >> rows >> columns;
-	for (int i = 0; i < rows; i++)
+    for (int i = 0; i < rows; i++) 
+    {
+        if (arr[i][colNo] > value) 
 	{
-		for (int j = 0; j < columns; j++)
-		{
-			cin >> array[i][j];
-		}
-	}
-	printSaddle(array, rows, columns);
-	return 0;
+            return false;
+        }
+    }
+    return true;
+}
+bool isSaddlePoint(int arr[][50], int rows, int columns, int rowNo, int colNo, int value) 
+{
+    return isMinimumRow(arr, rows, columns, rowNo, value) && isMaximumColumn(arr, rows, columns, colNo, value);
+}
+
+void printSaddle(int arr[][50], int rows, int columns)
+{
+    bool found = false;
+    for (int i = 0; i < rows; i++) 
+   {
+        for (int j = 0; j < columns; j++) 
+	{
+            if (isSaddlePoint(arr, rows, columns, i, j, arr[i][j])) 
+	    {
+                found = true;
+                cout << "Saddle Point: (" << i << ", " << j << ") -> " << arr[i][j] << endl;
+            }
+        }
+    }
+    if (!found)
+    {
+        cout << "No saddle point found." << endl;
+    }
 }
